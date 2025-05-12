@@ -1,0 +1,137 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+# 코드 스타일 가이드
+
+## 1. 파일 구조
+```typescript
+// 1. 임포트
+import { ... } from '...';
+
+// 2. 타입/인터페이스
+interface Props { ... }
+
+// 3. 상수
+const CONSTANTS = { ... }
+
+// 4. 컴포넌트/함수
+export function Component() { ... }
+
+// 5. 유틸리티
+function utility() { ... }
+```
+
+## 2. 네이밍 컨벤션
+```typescript
+// 컴포넌트: PascalCase
+export const StrategyCard = () => { ... }
+
+// 함수: camelCase
+function calculateProfit() { ... }
+
+// 상수: UPPER_SNAKE_CASE
+const MAX_RETRY_COUNT = 3;
+
+// 변수: camelCase
+let currentValue = 0;
+
+// 타입/인터페이스: PascalCase
+interface StrategyConfig { ... }
+```
+
+## 3. 주석 규칙
+```typescript
+/**
+ * 컴포넌트/함수 설명
+ * @param {type} name - 설명
+ * @returns {type} 설명
+ */
+
+// 중요 로직 설명
+function complex() {
+  // 왜 이렇게 구현했는지 설명
+}
+```
+
+## 4. 들여쓰기/포맷팅
+```typescript
+// 2칸 들여쓰기
+function example() {
+  if (condition) {
+    doSomething();
+  }
+}
+
+// 한 줄 최대 80자
+// 연산자 앞에서 줄바꿈
+const longOperation = first +
+  second +
+  third;
+```
+
+## 5. 함수 규칙
+```typescript
+// 최대 3개 매개변수
+function process(a, b, c) { ... }
+
+// 객체로 전달
+function complex({
+  param1,
+  param2,
+  param3,
+  param4
+}: ComplexParams) { ... }
+
+// 일찍 반환
+function validate() {
+  if (!valid) return false;
+  // 계속 진행
+}
+```
+
+## 6. 비동기 처리
+```typescript
+// async/await 사용
+async function getData() {
+  try {
+    const data = await fetch();
+    return data;
+  } catch (error) {
+    handleError(error);
+  }
+}
+```
+
+## 7. 컴포넌트 규칙
+```typescript
+// props 타입 정의
+interface Props {
+  data: Data;
+  onAction: (id: string) => void;
+}
+
+// 구조 분해 할당 사용
+function Component({ data, onAction }: Props) {
+  return <div />;
+}
+```
+
+## 8. 상태 관리
+```typescript
+// 상태 업데이트
+const [state, setState] = useState(initial);
+setState(prev => ({ ...prev, updated: true }));
+
+// 리듀서 액션
+type Action = 
+  | { type: 'START'; payload: string }
+  | { type: 'STOP'; payload: string };
+```
+
+## 실행 규칙
+1. 이 스타일 가이드는 자동으로 적용됩니다
+2. 린터/포맷터 설정과 연동됩니다
+3. CI/CD 파이프라인에서 검사됩니다
+4. 위반 시 자동으로 수정됩니다

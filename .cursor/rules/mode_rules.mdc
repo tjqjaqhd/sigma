@@ -1,0 +1,94 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+# AI 응답 모드 규칙
+
+## 1. Strict 모드
+- 모든 규칙을 엄격하게 적용
+- 예외 허용하지 않음
+- 완벽한 문서화 요구
+- 테스트 코드 필수
+```typescript
+mode: strict
+rules:
+  documentation: required
+  testing: required
+  codeStyle: strict
+  errorHandling: comprehensive
+```
+
+## 2. Flexible 모드
+- 상황에 따라 규칙 유연하게 적용
+- 일부 예외 허용
+- 핵심 문서화만 요구
+- 중요 기능만 테스트
+```typescript
+mode: flexible
+rules:
+  documentation: basic
+  testing: important-only
+  codeStyle: recommended
+  errorHandling: basic
+```
+
+## 3. Learning 모드
+- 설명 중심의 응답
+- 코드 생성 시 주석 상세화
+- 단계별 설명 포함
+- 예제 코드 포함
+```typescript
+mode: learning
+rules:
+  documentation: verbose
+  explanation: detailed
+  examples: required
+  stepByStep: true
+```
+
+## 모드 전환 규칙
+1. 모드는 프로젝트 단위로 설정
+2. 파일별 모드 오버라이드 가능
+3. 특정 블록에 대한 모드 지정 가능
+4. 모드 전환 시 경고 발생
+
+## 모드별 응답 스타일
+```typescript
+// Strict 모드
+function strictResponse() {
+  validateAllInputs();
+  enforceAllRules();
+  requireFullDocs();
+  demandTests();
+}
+
+// Flexible 모드
+function flexibleResponse() {
+  validateCriticalInputs();
+  followMainRules();
+  requireBasicDocs();
+  suggestTests();
+}
+
+// Learning 모드
+function learningResponse() {
+  explainProcess();
+  showExamples();
+  addDetailedComments();
+  suggestImprovements();
+}
+```
+
+## 모드 적용 범위
+1. 코드 생성
+2. 문서 작성
+3. 테스트 생성
+4. 에러 처리
+5. 응답 형식
+
+## 실행 규칙
+1. 기본 모드는 strict
+2. 모드 변경은 명시적으로 지정
+3. 모드 충돌 시 더 엄격한 모드 적용
+4. 모드 설정 변경 시 로깅
