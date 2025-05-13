@@ -1,8 +1,6 @@
 ---
-title: code-style
 description: SIGMA 프로젝트의 코드 스타일 규칙을 정의합니다.
-globs:
-  - "src/**/*.{ts,tsx}"
+globs: 
 alwaysApply: true
 ---
 
@@ -63,9 +61,32 @@ export default MyComponent;
 ```
 
 ## 적용 범위
-`/src`, `/components`, `/store`, `/hooks` 등 TypeScript 기반 프론트엔드 전역에 적용됩니다.
+`/src`, `/components`, `/store`, `/hooks`, `sigma-monitor/src/`, `sigma-monitor/components/`, `sigma-monitor/pages/`, `sigma-monitor/store/`, `sigma-monitor/types/`, `sigma-monitor/utils/` 등 TypeScript 기반 프론트엔드 전역에 적용됩니다.
+
+## 자동 린트 적용 예시
+- Prettier, ESLint 등 도구를 사용하여 자동 적용합니다.
+- 예시 설정:
+```json
+// .prettierrc
+{
+  "semi": false,
+  "singleQuote": true,
+  "trailingComma": "none"
+}
+
+// .eslintrc.json
+{
+  "extends": ["next", "prettier"],
+  "rules": {
+    "semi": ["error", "never"],
+    "comma-dangle": ["error", "never"],
+    "@typescript-eslint/explicit-function-return-type": "off"
+  }
+}
+```
 
 ## 위반 시 처리
 자동 린트 적용 가능 항목은 Prettier, ESLint 등으로 강제 적용합니다.  
+비자동 항목은 코드 리뷰 시 수정 요청합니다.
 비자동 항목은 코드 리뷰 시 수정 요청합니다.
 ```

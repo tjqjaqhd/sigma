@@ -1,7 +1,7 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import Layout from './components/layout/Layout';
-import Dashboard from './pages/Dashboard';
+import Layout from './components/layout/Layout.tsx';
+import Dashboard from './pages/Dashboard.tsx';
 
 // 임시 페이지 컴포넌트들 (나중에 실제 컴포넌트로 교체될 예정)
 const Strategy = () => <div>전략 관리 페이지</div>;

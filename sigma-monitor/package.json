@@ -1,8 +1,10 @@
 {
   "name": "sigma-monitor",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "private": true,
   "dependencies": {
+    "@capacitor/cli": "^7.2.0",
+    "@capacitor/core": "^7.2.0",
     "@emotion/react": "^11.11.4",
     "@emotion/styled": "^11.11.0",
     "@mui/icons-material": "^5.15.13",
@@ -24,8 +26,13 @@
     "zustand": "^4.5.2"
   },
   "scripts": {
+    "prebuild": "node update-android-version.js",
     "start": "react-scripts start",
     "build": "react-scripts build",
+    "sync": "npx cap sync android",
+    "native": "cd android && ./gradlew assembleDebug",
+    "postbuild": "cp android/app/build/outputs/apk/debug/app-debug.apk public/app-debug.apk && cp android/app/build/outputs/apk/debug/version.json public/version.json",
+    "fullbuild": "npm run build && npm run sync && npm run native && npm run postbuild",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
@@ -47,4 +54,4 @@
       "last 1 safari version"
     ]
   }
-} 
+}
