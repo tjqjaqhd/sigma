@@ -1,137 +1,71 @@
 ---
-description: 
-globs: 
+title: code-style
+description: SIGMA 프로젝트의 코드 스타일 규칙을 정의합니다.
+globs:
+  - "src/**/*.{ts,tsx}"
 alwaysApply: true
 ---
-# 코드 스타일 가이드
 
-## 1. 파일 구조
-```typescript
-// 1. 임포트
-import { ... } from '...';
+# SIGMA 코드 스타일 가이드
 
-// 2. 타입/인터페이스
-interface Props { ... }
+## 1. 세미콜론 사용 금지
+문장 끝에 세미콜론(`;`)을 사용하지 않습니다.
 
-// 3. 상수
-const CONSTANTS = { ... }
+## 2. 함수 선언 방식
+항상 화살표 함수(arrow function)를 사용합니다.  
+`function` 키워드는 사용하지 않습니다.
 
-// 4. 컴포넌트/함수
-export function Component() { ... }
-
-// 5. 유틸리티
-function utility() { ... }
+예시:
+```ts
+const handleSubmit = () => {
+  // ...
+};
 ```
 
-## 2. 네이밍 컨벤션
-```typescript
-// 컴포넌트: PascalCase
-export const StrategyCard = () => { ... }
+## 3. 변수 선언 순서
+가능한 한 `const`를 사용합니다.  
+필요한 경우에만 `let`을 사용합니다.  
+`var`는 사용하지 않습니다.
 
-// 함수: camelCase
-function calculateProfit() { ... }
+## 4. 쉼표 사용 금지
+끝에 붙는 쉼표(trailing comma)는 사용하지 않습니다.
 
-// 상수: UPPER_SNAKE_CASE
-const MAX_RETRY_COUNT = 3;
+## 5. 괄호 닫힘 공백 금지
+닫는 괄호 앞뒤에 공백을 넣지 않습니다.
 
-// 변수: camelCase
-let currentValue = 0;
-
-// 타입/인터페이스: PascalCase
-interface StrategyConfig { ... }
+예시:
+```ts
+return (
+  <Box />
+);
 ```
 
-## 3. 주석 규칙
-```typescript
-/**
- * 컴포넌트/함수 설명
- * @param {type} name - 설명
- * @returns {type} 설명
- */
+## 6. 네이밍 컨벤션
+변수 및 함수명은 camelCase를 사용합니다.
 
-// 중요 로직 설명
-function complex() {
-  // 왜 이렇게 구현했는지 설명
-}
+예시:
+```ts
+const isActive = true;
+const setTradeStatus = () => {};
 ```
 
-## 4. 들여쓰기/포맷팅
-```typescript
-// 2칸 들여쓰기
-function example() {
-  if (condition) {
-    doSomething();
-  }
-}
+## 7. 컴포넌트 파일 구조
+하나의 파일에는 하나의 컴포넌트만 포함합니다.  
+파일명은 컴포넌트명과 동일하게 PascalCase를 사용합니다.
 
-// 한 줄 최대 80자
-// 연산자 앞에서 줄바꿈
-const longOperation = first +
-  second +
-  third;
+예시:
+```tsx
+const MyComponent = () => {
+  return <div>내용</div>;
+};
+
+export default MyComponent;
 ```
 
-## 5. 함수 규칙
-```typescript
-// 최대 3개 매개변수
-function process(a, b, c) { ... }
+## 적용 범위
+`/src`, `/components`, `/store`, `/hooks` 등 TypeScript 기반 프론트엔드 전역에 적용됩니다.
 
-// 객체로 전달
-function complex({
-  param1,
-  param2,
-  param3,
-  param4
-}: ComplexParams) { ... }
-
-// 일찍 반환
-function validate() {
-  if (!valid) return false;
-  // 계속 진행
-}
+## 위반 시 처리
+자동 린트 적용 가능 항목은 Prettier, ESLint 등으로 강제 적용합니다.  
+비자동 항목은 코드 리뷰 시 수정 요청합니다.
 ```
-
-## 6. 비동기 처리
-```typescript
-// async/await 사용
-async function getData() {
-  try {
-    const data = await fetch();
-    return data;
-  } catch (error) {
-    handleError(error);
-  }
-}
-```
-
-## 7. 컴포넌트 규칙
-```typescript
-// props 타입 정의
-interface Props {
-  data: Data;
-  onAction: (id: string) => void;
-}
-
-// 구조 분해 할당 사용
-function Component({ data, onAction }: Props) {
-  return <div />;
-}
-```
-
-## 8. 상태 관리
-```typescript
-// 상태 업데이트
-const [state, setState] = useState(initial);
-setState(prev => ({ ...prev, updated: true }));
-
-// 리듀서 액션
-type Action = 
-  | { type: 'START'; payload: string }
-  | { type: 'STOP'; payload: string };
-```
-
-## 실행 규칙
-1. 이 스타일 가이드는 자동으로 적용됩니다
-2. 린터/포맷터 설정과 연동됩니다
-3. CI/CD 파이프라인에서 검사됩니다
-4. 위반 시 자동으로 수정됩니다
