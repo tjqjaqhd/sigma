@@ -11,9 +11,11 @@ def collect_market_data(top_n=10):
     :param top_n: 상위 몇 개 종목을 반환할지 지정 (기본 10개)
     :return: [{'market': 마켓코드, 'korean_name': 한글명, 'trade_price': 현재가, 'acc_trade_price_24h': 24시간 누적 거래대금} ...]
     """
+    try:
     # 1. 전체 마켓 코드 조회
     market_url = 'https://api.upbit.com/v1/market/all'
     market_res = requests.get(market_url, params={'isDetails': 'false'})
+        market_res.raise_for_status()
     markets = [m['market'] for m in market_res.json() if m['market'].startswith('KRW-')]
 
     # 2. 시세/거래량 데이터 조회
@@ -23,6 +25,7 @@ def collect_market_data(top_n=10):
     for i in range(0, len(markets), batch_size):
         batch = markets[i:i+batch_size]
         res = requests.get(ticker_url, params={'markets': ','.join(batch)})
+            res.raise_for_status()
         all_tickers.extend(res.json())
 
     # 3. 거래량 기준 정렬 및 상위 N개 추출
@@ -44,16 +47,19 @@ def collect_market_data(top_n=10):
             'acc_trade_price_24h': t['acc_trade_price_24h']
         })
     return result
+    except Exception as e:
+        print(f'[collector] 데이터 수집 실패: {e}')
+        return []
 
 
 def collect_news_data():
     """
-    뉴스 데이터 수집 함수
+    뉴스 데이터 수집 함수 (스켈레톤)
     """
     pass
 
 def collect_social_data():
     """
-    소셜 데이터 수집 함수
+    소셜 데이터 수집 함수 (스켈레톤)
     """
     pass 

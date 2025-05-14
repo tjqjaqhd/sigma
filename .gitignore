@@ -44,3 +44,24 @@ coverage/
 
 # TypeScript
 *.tsbuildinfo
+
+# 가상환경 및 불필요/민감 파일 제외
+venv/
+.env
+*.sqlite
+__pycache__/
+*.pyc
+.DS_Store
+
+# IDE/에디터 설정
+.vscode/
+.idea/
+
+# 압축/임시 파일
+*.zip
+*.log
+
+# 테스트/빌드 산출물
+*.egg-info/
+dist/
+build/

@@ -4,6 +4,10 @@ config.py
 """
 
 import os
+from dotenv import load_dotenv
+
+# .env 파일 자동 로드
+load_dotenv()
 
 def get_config(key, default=None):
     """
