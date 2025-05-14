@@ -1,6 +1,6 @@
 """
-strategy_engine.py
-GPT 기반 전략 생산 모듈
+gpt_controller.py
+GPT 기반 전략 컨트롤러 모듈
 """
 
 def generate_strategy(event, context):
