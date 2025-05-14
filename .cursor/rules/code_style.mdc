@@ -1,0 +1,92 @@
+---
+description: SIGMA 프로젝트의 코드 스타일 규칙을 정의합니다.
+globs: 
+alwaysApply: true
+---
+
+# SIGMA 코드 스타일 가이드
+
+## 1. 세미콜론 사용 금지
+문장 끝에 세미콜론(`;`)을 사용하지 않습니다.
+
+## 2. 함수 선언 방식
+항상 화살표 함수(arrow function)를 사용합니다.  
+`function` 키워드는 사용하지 않습니다.
+
+예시:
+```ts
+const handleSubmit = () => {
+  // ...
+};
+```
+
+## 3. 변수 선언 순서
+가능한 한 `const`를 사용합니다.  
+필요한 경우에만 `let`을 사용합니다.  
+`var`는 사용하지 않습니다.
+
+## 4. 쉼표 사용 금지
+끝에 붙는 쉼표(trailing comma)는 사용하지 않습니다.
+
+## 5. 괄호 닫힘 공백 금지
+닫는 괄호 앞뒤에 공백을 넣지 않습니다.
+
+예시:
+```ts
+return (
+  <Box />
+);
+```
+
+## 6. 네이밍 컨벤션
+변수 및 함수명은 camelCase를 사용합니다.
+
+예시:
+```ts
+const isActive = true;
+const setTradeStatus = () => {};
+```
+
+## 7. 컴포넌트 파일 구조
+하나의 파일에는 하나의 컴포넌트만 포함합니다.  
+파일명은 컴포넌트명과 동일하게 PascalCase를 사용합니다.
+
+예시:
+```tsx
+const MyComponent = () => {
+  return <div>내용</div>;
+};
+
+export default MyComponent;
+```
+
+## 적용 범위
+`/src`, `/components`, `/store`, `/hooks`, `sigma-monitor/src/`, `sigma-monitor/components/`, `sigma-monitor/pages/`, `sigma-monitor/store/`, `sigma-monitor/types/`, `sigma-monitor/utils/` 등 TypeScript 기반 프론트엔드 전역에 적용됩니다.
+
+## 자동 린트 적용 예시
+- Prettier, ESLint 등 도구를 사용하여 자동 적용합니다.
+- 예시 설정:
+```json
+// .prettierrc
+{
+  "semi": false,
+  "singleQuote": true,
+  "trailingComma": "none"
+}
+
+// .eslintrc.json
+{
+  "extends": ["next", "prettier"],
+  "rules": {
+    "semi": ["error", "never"],
+    "comma-dangle": ["error", "never"],
+    "@typescript-eslint/explicit-function-return-type": "off"
+  }
+}
+```
+
+## 위반 시 처리
+자동 린트 적용 가능 항목은 Prettier, ESLint 등으로 강제 적용합니다.  
+비자동 항목은 코드 리뷰 시 수정 요청합니다.
+비자동 항목은 코드 리뷰 시 수정 요청합니다.
+```
