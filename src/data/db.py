@@ -5,7 +5,8 @@ DB/메모리 캐시 연동 및 데이터 저장/조회 모듈
 
 import sqlite3
 import os
-from utils.config import get_config
+from src.utils.config import get_config
+from src.utils.error_handling import handle_error
 
 def get_db_path():
     return get_config('DB_PATH', './db.sqlite')
@@ -42,7 +43,7 @@ def save_data(data):
         conn.close()
         return True
     except Exception as e:
-        print(f'[db] 데이터 저장 실패: {e}')
+        handle_error(e)
         return False
 
 def load_data(query=None):
@@ -75,5 +76,5 @@ def load_data(query=None):
             })
         return result
     except Exception as e:
-        print(f'[db] 데이터 조회 실패: {e}')
+        handle_error(e)
         return [] 

@@ -4,6 +4,7 @@ preprocessor.py
 """
 
 import math
+from src.utils.error_handling import handle_error
 
 def clean_data(raw_data):
     """
@@ -50,4 +51,34 @@ def normalize_data(cleaned_data):
         norm_item['trade_price_norm'] = norm(item['trade_price'], min_p, max_p)
         norm_item['acc_trade_price_24h_norm'] = norm(item['acc_trade_price_24h'], min_v, max_v)
         result.append(norm_item)
-    return result 
+    return result
+
+def create_features(data, window=3):
+    """
+    전략용 피처(이동평균, 변동성 등) 생성 함수
+    :param data: 정제/정규화된 데이터(리스트)
+    :param window: 이동평균/변동성 계산 구간(기본 3)
+    :return: 피처가 추가된 데이터(리스트)
+    """
+    try:
+        if not data or len(data) < window:
+            return data
+        prices = [item['trade_price'] for item in data]
+        result = []
+        for i in range(len(data)):
+            feat_item = data[i].copy()
+            if i >= window - 1:
+                window_prices = prices[i-window+1:i+1]
+                # 이동평균
+                feat_item['ma'] = sum(window_prices) / window
+                # 변동성(표준편차)
+                mean = feat_item['ma']
+                feat_item['volatility'] = (sum((p-mean)**2 for p in window_prices) / window) ** 0.5
+            else:
+                feat_item['ma'] = None
+                feat_item['volatility'] = None
+            result.append(feat_item)
+        return result
+    except Exception as e:
+        handle_error(e)
+        return data 

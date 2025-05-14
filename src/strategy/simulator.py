@@ -3,61 +3,81 @@ simulator.py
 실시간/가상 시뮬레이션 모듈
 """
 
-def run_simulation(strategy_func, data_stream, initial_balance=1000000, fee=0.001):
+from src.strategy.arbitrage_signal import arbitrage_signal_strategy
+from src.execution.executor import execute_order
+from src.strategy.feedback import collect_feedback
+from src.strategy.monitoring import analyze_performance
+from src.utils.error_handling import handle_error
+
+def run_simulation(strategy_func, data_stream, mode='simulation', initial_balance=1000000, fee=0.001):
     """
-    전략 시뮬레이션 실행 함수
+    전략 시뮬레이션 실행 함수 (통합 루프)
     :param strategy_func: 전략 함수
     :param data_stream: 실시간/가상 데이터 제너레이터
+    :param mode: 'simulation', 'live', 'backtest' 중 선택
     :param initial_balance: 시작 자산
     :param fee: 거래 수수료 비율
-    :return: 실시간 포지션/잔고 변화, 거래 로그 등
+    :return: 전체 실행 결과/이력 리스트, 성과 분석 결과, 최종 잔고, 거래내역, 수익률
     """
+    results = []
+    feedback_data = []
+    trades = []
     balance = initial_balance
-    position = 0
-    trade_log = []
-    for i, data in enumerate(data_stream):
-        event = data
-        context = data
-        signal = strategy_func(event, context)
-        if signal and '매수' in signal and balance > 0:
-            qty = balance / data['trade_price']
-            balance = 0
-            position = qty
-            trade_log.append({'type': 'buy', 'price': data['trade_price'], 'qty': qty, 'i': i})
-        elif signal and '매도' in signal and position > 0:
-            balance = position * data['trade_price'] * (1 - fee)
-            trade_log.append({'type': 'sell', 'price': data['trade_price'], 'qty': position, 'i': i})
-            position = 0
-    if position > 0:
-        balance = position * data['trade_price'] * (1 - fee)
-        trade_log.append({'type': 'final_sell', 'price': data['trade_price'], 'qty': position, 'i': i})
-    result = {
-        'final_balance': balance,
-        'trades': trade_log,
-        'return': (balance - initial_balance) / initial_balance * 100
-    }
-    return result 
-
-def arbitrage_signal_strategy(event, context, threshold=50):
-    """
-    업비트-바이낸스 가격차 기반 차익거래 신호 전략
-    :param event: {'upbit_price': float, 'binance_price': float, ...}
-    :param context: 동일
-    :param threshold: 진입 임계값(가격차)
-    :return: '매수'(진입), '매도'(청산), '관망'
-    """
-    upbit = event.get('upbit_price')
-    binance = event.get('binance_price')
-    if upbit is None or binance is None:
-        return '관망'
-    # 진입: 바이낸스-업비트 가격차가 threshold 이상이면 진입(매수/공매도)
-    if (binance - upbit) >= threshold:
-        return '매수'
-    # 청산: 가격차가 0 이하로 수렴하면 청산
-    elif (binance - upbit) <= 0:
-        return '매도'
-    else:
-        return '관망'
+    try:
+        for i, data in enumerate(data_stream):
+            try:
+                # 1. 전략 신호 생성
+                event = data
+                context = data
+                strategy = strategy_func(event, context)
+                # 2. 주문 실행
+                order_dict = {
+                    'symbol': data.get('symbol', 'UNKNOWN'),
+                    'action': 'buy' if strategy and '매수' in strategy else ('sell' if strategy and '매도' in strategy else 'hold'),
+                    'amount': data.get('amount', 0.5),
+                    'type': 'spot'
+                }
+                if order_dict['action'] == 'hold':
+                    continue
+                order_result = execute_order(order_dict, mode=mode)
+                # 3. 피드백 기록
+                feedback = collect_feedback(order_result)
+                feedback_data.append(feedback)
+                # 4. 거래내역 및 잔고 반영
+                price = data.get('trade_price', 0)
+                if order_dict['action'] == 'buy':
+                    cost = price * order_dict['amount'] * (1 + fee)
+                    balance -= cost
+                    trades.append({'i': i, 'action': 'buy', 'price': price, 'amount': order_dict['amount'], 'cost': cost})
+                elif order_dict['action'] == 'sell':
+                    revenue = price * order_dict['amount'] * (1 - fee)
+                    balance += revenue
+                    trades.append({'i': i, 'action': 'sell', 'price': price, 'amount': order_dict['amount'], 'revenue': revenue})
+                results.append({
+                    'i': i,
+                    'data': data,
+                    'strategy': strategy,
+                    'order': order_result,
+                    'feedback': feedback
+                })
+            except Exception as e:
+                handle_error(e)
+                results.append({'i': i, 'data': data, 'error': str(e)})
+        # 5. 성과 분석
+        performance = analyze_performance(feedback_data)
+        total_invested = initial_balance
+        final_balance = balance
+        ret = ((final_balance - total_invested) / total_invested * 100) if total_invested > 0 else 0
+        return {
+            'results': results,
+            'performance': performance,
+            'final_balance': final_balance,
+            'trades': trades,
+            'return': ret
+        }
+    except Exception as e:
+        handle_error(e)
+        return {'results': results, 'performance': {}, 'final_balance': balance, 'trades': trades, 'return': 0}
 
 if __name__ == "__main__":
     from src.execution.executor import execute_arbitrage
@@ -92,4 +112,5 @@ if __name__ == "__main__":
     )
     print(f"최종 잔고: {sim_result['final_balance']}")
     print(f"거래내역: {sim_result['trades']}")
-    print(f"수익률(%): {sim_result['return']}") 
+    print(f"수익률(%): {sim_result['return']}")
+    print(f"성과분석: {sim_result['performance']}") 

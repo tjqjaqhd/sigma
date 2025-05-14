@@ -1,0 +1,4 @@
+{"status": "simulated", "profit": 50, "error": null, "upbit_order": {}, "binance_order": {}}
+{"status": "simulated", "profit": -25, "error": null, "upbit_order": {}, "binance_order": {}}
+{"status": "error", "profit": 0, "error": "API fail", "upbit_order": null, "binance_order": null}
+{"status": "simulated", "profit": 20, "error": null, "upbit_order": {}, "binance_order": {}}

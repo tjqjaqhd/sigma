@@ -3,6 +3,8 @@ monitoring.py
 전략 성과 모니터링 및 분석 모듈
 """
 
+from src.utils.error_handling import handle_error
+
 def analyze_performance(feedback_data):
     """
     전략 성과 분석 함수 (모니터링)
@@ -23,4 +25,5 @@ def analyze_performance(feedback_data):
             'success_rate': success_rate
         }
     except Exception as e:
+        handle_error(e)
         return {'total_profit': 0, 'total_trades': 0, 'success': 0, 'fail': 0, 'success_rate': 0, 'error': str(e)} 

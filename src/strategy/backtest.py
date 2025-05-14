@@ -38,24 +38,7 @@ def run_backtest(strategy_func, historical_data, initial_balance=1000000, fee=0.
     }
     return result 
 
-def arbitrage_signal_strategy(event, context, threshold=50):
-    """
-    업비트-바이낸스 가격차 기반 차익거래 신호 전략
-    :param event: {'upbit_price': float, 'binance_price': float, ...}
-    :param context: 동일
-    :param threshold: 진입 임계값(가격차)
-    :return: '매수'(진입), '매도'(청산), '관망'
-    """
-    upbit = event.get('upbit_price')
-    binance = event.get('binance_price')
-    if upbit is None or binance is None:
-        return '관망'
-    if (binance - upbit) >= threshold:
-        return '매수'
-    elif (binance - upbit) <= 0:
-        return '매도'
-    else:
-        return '관망'
+from src.strategy.arbitrage_signal import arbitrage_signal_strategy
 
 if __name__ == "__main__":
     # 예시 데이터: 업비트/바이낸스 과거 가격 스트림

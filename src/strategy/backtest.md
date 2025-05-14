@@ -18,4 +18,8 @@
 ## 4. 참고사항
 - 수수료, 슬리피지, 포지션 관리 등 확장 가능
 - **차익거래 전략도 반드시 백테스트로 과거 데이터에 대입해 검증 후 실전 적용**
-- **백테스트는 실전과 동일한 전략 함수와 직접 연동되어야 하며, 전략 검증(테스트)용임을 명확히 함** 
+- **백테스트는 실전과 동일한 전략 함수와 직접 연동되어야 하며, 전략 검증(테스트)용임을 명확히 함**
+- 전략 신호 함수(`arbitrage_signal_strategy`)는 별도 파일(`arbitrage_signal.py`)에 정의되어 있으며, 백테스트에서는 import 하여 사용합니다.
+- 예시: `from src.strategy.arbitrage_signal import arbitrage_signal_strategy`
+- 주문 실행 함수는 src/execution/executor.py의 execute_order를 사용하며, mode 파라미터('simulation', 'live', 'backtest')로 실전/시뮬/백테스트를 분기합니다.
+- 모든 예외/에러는 utils.error_handling.handle_error로 처리됩니다. 

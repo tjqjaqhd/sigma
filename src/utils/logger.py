@@ -16,4 +16,5 @@ def get_logger(name='SIGMA'):
         handler.setFormatter(formatter)
         logger.addHandler(handler)
     logger.setLevel(logging.INFO)
+    # TODO: 필요시 외부 모니터링/알림(Grafana, Slack 등) 연동 확장 가능
     return logger 
